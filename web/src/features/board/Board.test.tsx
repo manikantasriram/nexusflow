@@ -14,8 +14,10 @@ const titlesIn = (name: string) =>
 
 async function openBoard() {
   renderApp('/o/1/projects/1', { signedInAs: 1 })
-  await screen.findByRole('heading', { name: 'In progress' })
-  await screen.findByRole('button', { name: /Move WEB-1:/ })
+  // The first test in this file also pays for loading the lazy page chunks, which can take
+  // longer than Testing Library's default 1 s on a cold start.
+  await screen.findByRole('heading', { name: 'In progress' }, { timeout: 5000 })
+  await screen.findByRole('button', { name: /Move WEB-1:/ }, { timeout: 5000 })
 }
 
 describe('Kanban board', () => {
