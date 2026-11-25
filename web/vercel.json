@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "https://nexusflow-api.onrender.com/api/:path*" },
+    { "source": "/api/:path*", "destination": "https://nexusflow-api-f2td.onrender.com/api/:path*" },
     { "source": "/((?!assets/).*)", "destination": "/index.html" }
   ],
   "headers": [
