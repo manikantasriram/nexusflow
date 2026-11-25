@@ -4,6 +4,12 @@ A multi-tenant B2B project and document intelligence app. Organizations invite t
 roles, run projects on a Kanban board, and upload documents that NexusFlow reads: it writes a
 summary, pulls out keywords, finds the to-dos, and turns them into tasks with one click.
 
+**Live demo:** [nexusflow-manikanta.vercel.app](https://nexusflow-manikanta.vercel.app) (use a demo
+account below) · **API docs:** [nexusflow-api-f2td.onrender.com/docs](https://nexusflow-api-f2td.onrender.com/docs)
+
+The API runs on Render's free plan, which sleeps when idle: the first request after a quiet
+spell can take up to a minute.
+
 **Stack:** React 19 · TypeScript (strict) · Vite · Tailwind CSS 4 · React Router · TanStack Query ·
 Zustand · React Hook Form + Zod · Vitest + Testing Library + MSW — FastAPI · Pydantic v2 ·
 SQLAlchemy 2 · Alembic · PostgreSQL · Redis · Pytest — Docker Compose · GitHub Actions · Vercel ·

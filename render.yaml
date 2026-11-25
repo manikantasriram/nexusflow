@@ -19,7 +19,7 @@ services:
       # The web app is served from Vercel, which forwards /api here (see web/vercel.json), so the
       # browser sees one origin and the refresh cookie can stay SameSite=Lax.
       - key: CORS_ORIGINS
-        value: https://nexusflow.vercel.app
+        value: https://nexusflow-manikanta.vercel.app
       - key: COOKIE_SECURE
         value: "true"
       - key: COOKIE_SAMESITE
