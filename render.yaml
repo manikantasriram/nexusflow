@@ -1,0 +1,28 @@
+# Render Blueprint for the API. The database (Neon PostgreSQL) and Redis (e.g. Render Key Value
+# or Upstash) are created separately; paste their URLs into DATABASE_URL and REDIS_URL in the
+# Render dashboard. Check the current free tiers before signing up.
+services:
+  - type: web
+    name: nexusflow-api
+    runtime: docker
+    rootDir: api
+    plan: free
+    region: singapore
+    healthCheckPath: /api/health
+    envVars:
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      # The web app is served from Vercel, which forwards /api here (see web/vercel.json), so the
+      # browser sees one origin and the refresh cookie can stay SameSite=Lax.
+      - key: CORS_ORIGINS
+        value: https://nexusflow.vercel.app
+      - key: COOKIE_SECURE
+        value: "true"
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: SEED_DEMO
+        value: "true"

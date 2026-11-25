@@ -1,0 +1,5 @@
+# Store and check out text files with LF line endings, on every OS. Shell scripts with CRLF
+# endings fail inside Linux containers ("start.sh: not found").
+* text=auto eol=lf
+*.png binary
+*.woff2 binary

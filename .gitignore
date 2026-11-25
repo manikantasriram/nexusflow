@@ -1,0 +1,21 @@
+# Dependencies and build output
+node_modules/
+dist/
+.venv/
+__pycache__/
+*.pyc
+
+# Local data and secrets
+*.db
+.env
+.env.*
+!.env.example
+!web/.env.mock
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+coverage/
+.playwright-mcp/
+*.log
+.DS_Store
