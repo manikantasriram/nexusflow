@@ -1,19 +1,39 @@
 # NexusFlow
 
+[![CI](https://github.com/manikantasriram/nexusflow/actions/workflows/ci.yml/badge.svg)](https://github.com/manikantasriram/nexusflow/actions/workflows/ci.yml)
+
 A multi-tenant B2B project and document intelligence app. Organizations invite their team with
 roles, run projects on a Kanban board, and upload documents that NexusFlow reads: it writes a
 summary, pulls out keywords, finds the to-dos, and turns them into tasks with one click.
 
-**Live demo:** [nexusflow-manikanta.vercel.app](https://nexusflow-manikanta.vercel.app) (use a demo
-account below) · **API docs:** [nexusflow-api-f2td.onrender.com/docs](https://nexusflow-api-f2td.onrender.com/docs)
+**[Live demo](https://nexusflow-manikanta.vercel.app)** · **[API docs](https://nexusflow-api-f2td.onrender.com/docs)** ·
+sign in with a [demo account](#demo-accounts), for example `owner@demo.nexusflow.dev` / `demo-pass-123`.
+The API runs on Render's free plan and sleeps when idle, so the first request can take up to a minute.
 
-The API runs on Render's free plan, which sleeps when idle: the first request after a quiet
-spell can take up to a minute.
+![Dashboard with open, overdue and due-soon counts, work by status and priority, and tasks assigned to you](docs/screenshots/dashboard.png)
 
-**Stack:** React 19 · TypeScript (strict) · Vite · Tailwind CSS 4 · React Router · TanStack Query ·
-Zustand · React Hook Form + Zod · Vitest + Testing Library + MSW — FastAPI · Pydantic v2 ·
-SQLAlchemy 2 · Alembic · PostgreSQL · Redis · Pytest — Docker Compose · GitHub Actions · Vercel ·
-Render · Neon
+## Highlights
+
+- **Tenant isolation, tested.** Every query is scoped to the organization, and tests prove a user
+  in one organization gets 404 for every read and write in another.
+- **Rotating refresh tokens with reuse detection**, access tokens kept only in memory, and login
+  rate limiting shared through Redis.
+- **Optimistic, keyboard-accessible Kanban board.** One pure reducer drives both the optimistic
+  cache updates and the keyboard-move preview; failed moves roll back with a message.
+- **Document intelligence.** Uploads are summarised, keyword-tagged and scanned for to-dos that
+  become tasks in one click.
+- **Production setup.** Alembic migrations checked against the models in CI, 89 automated tests
+  (pytest on PostgreSQL and Redis, Vitest with MSW), Docker Compose, and deploys to Vercel and
+  Render.
+
+## Stack
+
+| Layer | Tools |
+| ----- | ----- |
+| Frontend | React 19, TypeScript (strict), Vite, Tailwind CSS 4, React Router, TanStack Query, Zustand, React Hook Form, Zod |
+| Backend | Python, FastAPI, Pydantic v2, SQLAlchemy 2, Alembic, PostgreSQL, Redis |
+| Testing | Pytest, Vitest, Testing Library, MSW |
+| Ops | Docker Compose, GitHub Actions, Vercel, Render, Neon |
 
 ## What it does
 
@@ -34,6 +54,10 @@ Render · Neon
   (`- [ ] …`, `TODO: …`, `Action: …`) that you can turn into tasks.
 - **Secure sessions.** Short-lived access tokens kept only in memory, refresh tokens in an
   httpOnly cookie with rotation and reuse detection, and login rate limiting.
+
+![Kanban board with a card being moved by keyboard into the In review column](docs/screenshots/board.png)
+
+![A meeting-notes document with its summary, keywords and action items ready to become tasks](docs/screenshots/documents.png)
 
 ## Architecture
 
@@ -88,7 +112,7 @@ for the dashboard's due-date counts.
 docker compose up --build
 ```
 
-Open http://localhost:8080. The API's interactive docs are at http://localhost:8000/docs.
+Open <http://localhost:8080>. The API's interactive docs are at <http://localhost:8000/docs>.
 
 ### Option 2: without Docker (SQLite, in-memory cache)
 
@@ -149,10 +173,10 @@ CI ([.github/workflows/ci.yml](.github/workflows/ci.yml)) runs all of this on ev
 request, runs the API tests against real PostgreSQL and Redis, checks that the Alembic migrations
 match the models exactly, and builds both Docker images.
 
-## Measured numbers
+## Benchmarking the indexes
 
-Numbers on this page come only from runs you can repeat. To measure query times with and
-without the task indexes on 100,000 tasks per organization:
+`app/bench.py` measures the main task queries with and without their indexes, on 100,000 tasks
+per organization:
 
 ```bash
 cd api
@@ -161,11 +185,8 @@ DATABASE_URL=postgresql+psycopg://nexusflow:nexusflow@localhost:5432/nexusflow \
 ```
 
 It seeds its own organizations (never touching demo data), measures p50 and p95 for the board,
-"assigned to me" and overdue-count queries, and prints a Markdown table to paste here.
-
-| Query | Without indexes p50 / p95 (ms) | With indexes p50 / p95 (ms) |
-|---|---|---|
-| _Run the command above against PostgreSQL and paste the results._ | | |
+"assigned to me" and overdue-count queries, and prints the results as a Markdown table. It puts
+the indexes back afterwards.
 
 ## Design decisions
 
@@ -201,7 +222,7 @@ Check the current free tiers before signing up.
 
 ## Project layout
 
-```
+```text
 api/
   app/
     routers/        HTTP endpoints (auth, orgs, projects, tasks, documents)
